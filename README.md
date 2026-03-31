@@ -1,95 +1,86 @@
 # Contrastive Common and Unique Deep Embedded Clustering
-PyTorch implementation of a **multi-view deep clustering framework** that separates each input view into:
 
-- a **common latent representation** for shared semantic structure, and
-- a **unique latent representation** for view-specific or complementary information.
+A PyTorch implementation of a **multi-view deep clustering framework** that learns disentangled **shared** and **view-specific** latent representations for unsupervised clustering.
 
-The model combines **reconstruction**, **cross-view contrastive learning**, and **prototype-based clustering** to learn cluster-friendly shared embeddings while preserving view-specific detail.
+This repository implements a model that decomposes each input view into:
 
-## Overview
+- a **common latent** capturing view-invariant semantic structure, and
+- a **unique latent** capturing complementary, view-specific variation.
 
-Many multi-view learning problems contain two kinds of information:
+The framework combines **reconstruction**, **cross-view contrastive alignment**, and **prototype-based clustering** to learn cluster-friendly shared embeddings while preserving the information needed to reconstruct heterogeneous inputs.
 
-1. **Shared information** that is consistent across views
-2. **Unique information** that is specific to a particular view
+---
 
-This repository implements a model that explicitly decomposes each view into these two parts:
+## Highlights
 
-- **Common latent (`c`)**: intended to capture cluster-relevant, view-invariant semantics
-- **Unique latent (`u`)**: intended to capture view-specific variation
+- **Multi-view deep clustering** with configurable number of views
+- **Common / unique latent decomposition**
+- **Contrastive learning** applied to the shared latent space
+- **Reconstruction from concatenated common + unique embeddings**
+- **Prototype-conditioned clustering in common latent space**
+- **GPU-friendly streaming utilities** for encoding and evaluation
+- **Flexible backbone selection**
+- **Visualization tools** for reconstructions, embeddings, losses, and clustering behavior
+- **Support for multiple benchmark datasets**
 
-The framework supports multiple views, configurable latent dimensions, and GPU-based training. It includes utilities for visualization, clustering evaluation, and running experiments on several image-based and multi-view datasets.
+---
 
-## Main Features
+## Method Overview
 
-- **Multi-view clustering**
-- **Separate common and unique latent spaces**
-- **Contrastive alignment on the common latent space**
-- **Reconstruction from concatenated common + unique latents**
-- **Prototype / cluster-center learning in common space**
-- **Support for variable number of views**
-- **GPU-friendly streaming evaluation utilities**
-- **Configurable backbone selection**
-- **Visualization tools for embeddings, reconstructions, and training curves**
-- **Optional hyperparameter optimization tools via Optuna**
+Many multi-view problems contain two fundamentally different types of information:
 
-## Method Summary
+1. **Shared information** that is consistent across views and useful for clustering
+2. **View-specific information** that reflects nuisance factors, complementary detail, or modality-dependent variation
 
-The model is trained in two main stages:
+This repository models that structure explicitly.
 
-### 1. Contrastive pretraining
-Each view is passed through an encoder-decoder pipeline:
+For each view \(x^{(v)}\), the encoder produces:
 
-- encoder for **common latent**
-- encoder for **unique latent**
-- decoder reconstructing the original input from `[c ; u]`
+- **common latent** \(c^{(v)}\)
+- **unique latent** \(u^{(v)}\)
 
-During pretraining, the model minimizes:
+The decoder reconstructs the input from the concatenated latent:
 
-- **Reconstruction loss** across all views
-- **NT-Xent contrastive loss** between the common latents of different views
+\[
+\hat{x}^{(v)} = g([c^{(v)} \oplus u^{(v)}])
+\]
 
-This encourages:
-- common latents to align across views
-- unique latents to preserve the remaining view-specific information needed for reconstruction
+### Training proceeds in two stages
 
-### 2. Prototype-based clustering
-Cluster centers are learned in the **common latent space**.  
-At inference, the model evaluates cluster assignments by combining:
+#### Stage I: Contrastive pretraining
+The model is trained with:
 
-- learned common-space prototypes
-- unique latent for each view
-- reconstruction error across candidate clusters
+- **reconstruction loss** over all views
+- **NT-Xent contrastive loss** between shared latents across views
 
-The multi-view prediction rule selects the cluster whose prototype + unique latent yields the best normalized reconstruction fit across views.
+This encourages the shared representation to align across views while still allowing the unique branch to preserve complementary information.
 
-Example Workflow
-Set dataset_name in scripts/config.py
-Set the number of views with views
-Choose latent dimensions:
-LATENT_DIM_C
-LATENT_DIM_U
-Set training hyperparameters:
-LR
-PRE_TRAIN_EPOCHS
-TEMPERATURE_CON
-LAMBDA
-Run the script
-Inspect saved weights and generated visualizations
+#### Stage II: Prototype-guided clustering
+Cluster centers are learned in the **shared latent space**.  
+Cluster assignment is determined by evaluating how well a shared prototype, combined with the view-specific latent, reconstructs the observed inputs across views.
 
-Core dependencies
-Python 3.9+
-PyTorch
-torchvision
-numpy
-pandas
-matplotlib
-scikit-learn
-tqdm
-pillow
-scikit-image
-seaborn
-optuna
+This design encourages prototypes to capture semantic structure in the common latent space while leaving view-dependent detail to the unique branch.
+
+---
+
+## Architecture
+
+The code currently supports a decomposition of the form:
+
+- **Encoder for common latent** \(c\)
+- **Encoder for unique latent** \(u\)
+- **Decoder** operating on \([c;u]\)
+- **Cluster layer** defined in the common latent space
+
+Implemented model components include:
+
+- `CAE` — convolutional autoencoder backbone
+- `FCAE` — fully connected autoencoder variant
+- `C_U_Model` — top-level clustering model
+- `NTXentOnC` — contrastive loss on shared latents
+- `Cluster_loss_SoftPullAssigned` — prototype pull + reconstruction refinement loss
+
+---
 
 ## Repository Structure
 ```text
@@ -107,4 +98,3 @@ optuna
 ├── weights/
 ├── main.py
 └── README.md
-
