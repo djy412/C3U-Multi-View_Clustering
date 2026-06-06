@@ -1,4 +1,4 @@
-# Contrastive Common and Unique Deep Embedded Clustering
+# C3U-MVC: Contrastive-Complementary Common and Unique Multi-View Clustering
 
 A PyTorch implementation of a **multi-view deep clustering framework** that learns disentangled **shared** and **view-specific** latent representations for unsupervised clustering.
 
@@ -80,7 +80,11 @@ Implemented model components include:
 - `NTXentOnC` — contrastive loss on shared latents
 - `Cluster_loss_SoftPullAssigned` — prototype pull + reconstruction refinement loss
 
----
+## Installation
+```bash
+git clone https://github.com/djy412/C3U-Multi-View_Clustering.git
+cd C3U-Multi-View_Clustering
+pip install -r requirements.txt
 
 ## Repository Structure
 ```text
