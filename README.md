@@ -80,11 +80,31 @@ Implemented model components include:
 - `NTXentOnC` — contrastive loss on shared latents
 - `Cluster_loss_SoftPullAssigned` — prototype pull + reconstruction refinement loss
 
+Citation:
+@article{yates2026c3umvc,
+  title={C3U-MVC: ...},
+  author={Yates, Don Jared et al.},
+  journal={...},
+  year={2026}
+}
+
+License:
+MIT License (see LICENSE file)
+
 ## Installation
 ```bash
 git clone https://github.com/djy412/C3U-Multi-View_Clustering.git
 cd C3U-Multi-View_Clustering
 pip install -r requirements.txt
+
+Reproducing Paper Results
+All results in the paper were produced with:
+
+Python 3.10+, PyTorch 2.0+
+Adam optimizer (lr=0.001), batch size 64
+Fixed random seeds (see config files)
+
+Exact commands and seeds are provided in the scripts/ folder and paper supplementary.
 
 ## Repository Structure
 ```text
