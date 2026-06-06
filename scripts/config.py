@@ -6,17 +6,17 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_ROOT = Path(os.getenv("C3U_DATA_ROOT", PROJECT_ROOT / "data"))
 WEIGHTS_ROOT = Path(os.getenv("C3U_WEIGHTS_ROOT", PROJECT_ROOT / "weights"))
 
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 WORKERS = 8         #--- Load data in parallel by choosing the best num of workers for your system
 PRE_TRAIN_EPOCHS = 100
 FINE_TUNE_EPOCHS = 30
 MODEL_FILENAME = './data/model.ckpt'
 
 LR = 0.001              #--- Learning rate 
-LAMBDA = 0.5             #--- Common Contrastive loss
+LAMBDA = 1             #--- Common Contrastive loss
 MARGIN = 0.5            #--- Complementary Margin 
 GAMMA = 0.6             #--- Complementary Clustering loss
-TEMPERATURE_CON = 0.3   #--- Controls the stage I contrastive loss
+TEMPERATURE_CON = 0.2   #--- Controls the stage I contrastive loss
 W_PULL = 0.6            #--- Controls the stage II soft assignment loss
 
 BETA = 0.0
@@ -24,8 +24,8 @@ BETA_IB = 0.01      #--- New param for IB KL weight; add to config
 
 NORMALIZED = True
 LATENT_DIM = 3
-LATENT_DIM_C = 18
-LATENT_DIM_U = 18
+LATENT_DIM_C = 15
+LATENT_DIM_U = 15
 NUM_CLASSES = 10    #--- 1446 for CelebA full
 TOLERANCE = 0.01    #--- How close to the last estimage is good enough
 UPDATE_INTERVAL = 3 #--- How often to update the estimated "true data", 1 would = updating every Epoch
