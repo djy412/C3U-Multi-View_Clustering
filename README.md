@@ -8,12 +8,12 @@
 
 ## Overview
 
-C3U-MVC is a deep embedded multi-view clustering framework that disentangles **shared (common)** and **view-specific (unique)** representations *without* imposing conditional independence or orthogonality constraints. The model uses:
+C3U-MVC is a deep embedded multi-view clustering framework that learns an operational decomposition between shared/common and view-specific/unique representations without imposing conditional independence or orthogonality constraints. The model uses:
 
 - Cross-view contrastive alignment **only** in the shared subspace
 - Reconstruction from concatenated shared + view-specific latents to preserve complementary information
 - A two-stage training procedure (contrastive pretraining → positives-only prototype refinement)
-- Prototype-conditioned reconstruction with per-instance best-view selection for robust clustering
+- Prototype-conditioned reconstruction with per-instance best-view selection for adaptive clustering
 
 ## Features
 
