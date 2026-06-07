@@ -38,10 +38,11 @@ pip install -r requirements.txt
 ```
 
 ## Quick Start
+1. Edit `scripts/config.py` to select the dataset, latent dimensions, number of views, epochs, and random seed.
+2. Run:
 ```
 bash
-# Train on Fashion-MNIST (example)
-python main.py --dataset fashion_mnist --stage1_epochs 200 --stage2_epochs 50 --seed 42
+python main.py
 ```
 For full hyperparameter options:
 ```
