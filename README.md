@@ -1,124 +1,91 @@
 # C3U-MVC: Contrastive-Complementary Common and Unique Multi-View Clustering
 
-A PyTorch implementation of a **multi-view deep clustering framework** that learns disentangled **shared** and **view-specific** latent representations for unsupervised clustering.
+**Official PyTorch implementation** of the model presented in our paper:
 
-This repository implements a model that decomposes each input view into:
+> **Disentangling shared and Specific Features in Deep Multimodal Clustering with Contrastive-Complementary Learning**  
+> Don Jared Yates et al.  
+> [Paper Link](https://arxiv.org/abs/...) | [GitHub](https://github.com/djy412/C3U-Multi-View_Clustering)
 
-- a **common latent** capturing view-invariant semantic structure, and
-- a **unique latent** capturing complementary, view-specific variation.
+## Overview
 
-The framework combines **reconstruction**, **cross-view contrastive alignment**, and **prototype-based clustering** to learn cluster-friendly shared embeddings while preserving the information needed to reconstruct heterogeneous inputs.
+C3U-MVC is a deep embedded multi-view clustering framework that disentangles **shared (common)** and **view-specific (unique)** representations *without* imposing conditional independence or orthogonality constraints. The model uses:
 
----
+- Cross-view contrastive alignment **only** in the shared subspace
+- Reconstruction from concatenated shared + view-specific latents to preserve complementary information
+- A two-stage training procedure (contrastive pretraining → positives-only prototype refinement)
+- Prototype-conditioned reconstruction with per-instance best-view selection for robust clustering
 
-## Highlights
+## Features
 
-- **Multi-view deep clustering** with configurable number of views
-- **Common / unique latent decomposition**
-- **Contrastive learning** applied to the shared latent space
-- **Reconstruction from concatenated common + unique embeddings**
-- **Prototype-conditioned clustering in common latent space**
-- **GPU-friendly streaming utilities** for encoding and evaluation
-- **Flexible backbone selection**
-- **Visualization tools** for reconstructions, embeddings, losses, and clustering behavior
-- **Support for multiple benchmark datasets**
-
----
-
-## Method Overview
-
-Many multi-view problems contain two fundamentally different types of information:
-
-1. **Shared information** that is consistent across views and useful for clustering
-2. **View-specific information** that reflects nuisance factors, complementary detail, or modality-dependent variation
-
-This repository models that structure explicitly.
-
-For each view \(x^{(v)}\), the encoder produces:
-
-- **common latent** \(c^{(v)}\)
-- **unique latent** \(u^{(v)}\)
-
-The decoder reconstructs the input from the concatenated latent:
-
-\[
-\hat{x}^{(v)} = g([c^{(v)} \oplus u^{(v)}])
-\]
-
-### Training proceeds in two stages
-
-#### Stage I: Contrastive pretraining
-The model is trained with:
-
-- **reconstruction loss** over all views
-- **NT-Xent contrastive loss** between shared latents across views
-
-This encourages the shared representation to align across views while still allowing the unique branch to preserve complementary information.
-
-#### Stage II: Prototype-guided clustering
-Cluster centers are learned in the **shared latent space**.  
-Cluster assignment is determined by evaluating how well a shared prototype, combined with the view-specific latent, reconstructs the observed inputs across views.
-
-This design encourages prototypes to capture semantic structure in the common latent space while leaving view-dependent detail to the unique branch.
-
----
-
-## Architecture
-
-The code currently supports a decomposition of the form:
-
-- **Encoder for common latent** \(c\)
-- **Encoder for unique latent** \(u\)
-- **Decoder** operating on \([c;u]\)
-- **Cluster layer** defined in the common latent space
-
-Implemented model components include:
-
-- `CAE` — convolutional autoencoder backbone
-- `FCAE` — fully connected autoencoder variant
-- `C_U_Model` — top-level clustering model
-- `NTXentOnC` — contrastive loss on shared latents
-- `Cluster_loss_SoftPullAssigned` — prototype pull + reconstruction refinement loss
-
-Citation:
-@article{yates2026c3umvc,
-  title={C3U-MVC: ...},
-  author={Yates, Don Jared et al.},
-  journal={...},
-  year={2026}
-}
-
-License:
-MIT License (see LICENSE file)
+- Dual-encoder (shared + view-specific), single decoder architecture
+- Strong performance on both image-pair and true multi-view benchmarks
+- Support for image data and heterogeneous feature vectors (e.g., Caltech-101 subsets)
+- Reproducible training scripts with fixed seeds
 
 ## Installation
-```bash
+
+```
+bash
 git clone https://github.com/djy412/C3U-Multi-View_Clustering.git
 cd C3U-Multi-View_Clustering
+
+# Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate    # Linux/macOS
+# venv\Scripts\activate     # Windows
+
 pip install -r requirements.txt
+```
 
+## Quick Start
+```
+bash
+# Train on Fashion-MNIST (example)
+python main.py --dataset fashion_mnist --stage1_epochs 200 --stage2_epochs 50 --seed 42
+```
+For full hyperparameter options:
+```
+bash
+python main.py --help
+```
 Reproducing Paper Results
-All results in the paper were produced with:
+All results reported in the paper were obtained using:
 
-Python 3.10+, PyTorch 2.0+
+Python 3.10+
+PyTorch 2.4.1 + TorchVision 0.19.1
 Adam optimizer (lr=0.001), batch size 64
-Fixed random seeds (see config files)
+Fixed random seeds (configurable)
 
-Exact commands and seeds are provided in the scripts/ folder and paper supplementary.
-
-## Repository Structure
-```text
-.
-├── classes/
-│   ├── ResNet18_encoder.py
-│   ├── ResNet18_decoder.py
-│   └── ResNet18_autoencoder.py
+See scripts/config.py for dataset-specific settings. Pre-trained weights are available in the weights/ directory.
+Repository Structure
+```
+textC3U-Multi-View_Clustering/
+├── classes/                # Core model classes (encoders, decoder, C3U model)
 ├── scripts/
-│   ├── config.py
-│   ├── data_loading.py
-│   └── utils.py
-├── Visualizations/
-│   └── Visualization.py
-├── weights/
-├── main.py
+│   ├── config.py           # Hyperparameters and dataset settings
+│   ├── data_loading.py     # Data loaders for multi-view datasets
+│   └── utils.py            # Training utilities and metrics
+├── Visualizations/         # Visualization and plotting scripts
+├── weights/                # Pre-trained model checkpoints
+├── main.py                 # Main training script
+├── requirements.txt
+├── LICENSE
 └── README.md
+```
+Citation
+If you use this code or build upon our work, please cite our paper:
+```
+bibtex
+  @inproceedings{yates2026c3umvc,
+  title={Disentangling shared and Specific Features in Deep Multimodal Clustering with Contrastive-Complementary Learning},
+  author={Yates, Don and Sevil, Hakki Erhan and Mahyari, Arash},
+  booktitle={...},
+  year={2026}
+}
+```
+
+License
+This project is licensed under the MIT License — see the LICENSE file for details.
+
+Contact
+Questions or issues? Feel free to open an issue on GitHub or contact the authors.
