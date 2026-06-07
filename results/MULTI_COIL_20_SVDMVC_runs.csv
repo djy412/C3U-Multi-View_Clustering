@@ -1,0 +1,11 @@
+dataset;method;seed;backbone;stage1_acc;stage1_nmi;stage1_pur;stage2_acc;stage2_nmi;stage2_pur;latent_dim_c;latent_dim_u;num_classes;batch_size;lr;lambda;gamma;w_pull;temperature_con;pre_train_epochs;fine_tune_epochs;update_interval;img_size;normalized
+MULTI_COIL_20;C3U-MVC;12;cae;;;;0.8167;0.9264;0.825;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;2;cae;;;;0.7979;0.9147;0.8292;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;6;cae;;;;0.8333;0.9367;0.85;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;21;cae;;;;0.8187;0.9138;0.8187;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;42;cae;;;;0.7333;0.8725;0.7833;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;101;cae;;;;0.7896;0.9074;0.7958;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;123;cae;;;;0.7937;0.9037;0.8208;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;2024;cae;;;;0.7604;0.898;0.7792;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;3407;cae;;;;0.8042;0.8985;0.8187;;;;;;;;;;;;;64;True
+MULTI_COIL_20;C3U-MVC;9999;cae;;;;0.8208;0.9209;0.8375;;;;;;;;;;;;;64;True

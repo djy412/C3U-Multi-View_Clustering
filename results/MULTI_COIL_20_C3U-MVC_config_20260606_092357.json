@@ -1,0 +1,31 @@
+{
+    "dataset": "MULTI_COIL_20",
+    "method": "C3U-MVC",
+    "seeds": [
+        12,
+        2,
+        6,
+        21,
+        42,
+        101,
+        123,
+        2024,
+        3407,
+        9999
+    ],
+    "backbone": "cae",
+    "latent_dim_c": 3,
+    "latent_dim_u": 3,
+    "num_classes": 20,
+    "batch_size": 128,
+    "lr": 0.001,
+    "lambda": 1.0,
+    "gamma": 0.6,
+    "w_pull": 0.6,
+    "temperature_con": 0.2,
+    "pre_train_epochs": 100,
+    "fine_tune_epochs": 30,
+    "update_interval": 3,
+    "img_size": "64",
+    "normalized": true
+}
