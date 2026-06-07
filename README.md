@@ -51,9 +51,10 @@ python main.py --help
 Reproducing Paper Results
 All results reported in the paper were obtained using:
 
-Python 3.10+
-PyTorch 2.4.1 + TorchVision 0.19.1
-Adam optimizer (lr=0.001), batch size 64
+Python 3.13.7
+torch==2.11.0.dev20260121+cu128
+torchvision==0.25.0.dev20260121+cu128
+Adam optimizer (lr=0.001), batch size 128
 Fixed random seeds (configurable)
 
 See scripts/config.py for dataset-specific settings. Pre-trained weights are available in the weights/ directory.
